@@ -19,6 +19,11 @@ import CareerTimeline from './components/Resume/CareerTimeline'; // Assuming you
 import BlogListing from './components/Blog/BlogListing'; // Assuming your BlogListing component path (if applicable)
 import ContactForm from './components/Contact/ContactForm'; // Assuming your ContactForm component path
 import SocialLinks from './components/Contact/SocialLinks'; // Assuming your SocialLinks component path
+import Aside from './components/Aside'; // Assuming your Aside component path
+import CartMain from './components/CartMain'; // Assuming your CartMain component path
+import PredictiveSearchForm from './components/PredictiveSearchForm'; // Assuming your PredictiveSearchForm component path
+import PredictiveSearchResults from './components/PredictiveSearchResults'; // Assuming your PredictiveSearchResults component path
+import HeaderMenu from './components/HeaderMenu'; // Assuming your HeaderMenu component path
 
 export function Layout({ children, page, ...props }) { // Use props object for flexibility
   return (
@@ -81,9 +86,7 @@ export function Layout({ children, page, ...props }) { // Use props object for f
     </>
   );
 }
-/**
- * @param {{cart: LayoutProps['cart']}}
- */
+
 function CartAside({cart}) {
   return (
     <Aside id="cart-aside" heading="CART">
@@ -133,99 +136,6 @@ function SearchAside() {
   );
 }
 
-/**
- * @param {{
- *   menu: HeaderQuery['menu'];
- *   shop: HeaderQuery['shop'];
- * }}
- */
-function MobileMenuAside({menu, shop}) {
-  return (
-    menu &&
-    shop?.primaryDomain?.url && (
-      <Aside id="mobile-menu-aside" heading="MENU">
-        <HeaderMenu
-          menu={menu}
-          viewport="mobile"
-          primaryDomainUrl={shop.primaryDomain.url}
-        />
-      </Aside>
-    )
-  );
-}
-
-/**
- * @typedef {{
- *   cart: Promise<CartApiQueryFragment | null>;
- *   children?: React.ReactNode;
- *   footer: Promise<FooterQuery>;
- *   header: HeaderQuery;
- *   isLoggedIn: Promise<boolean>;
- * }} LayoutProps
- */
-
-/** @typedef {import('storefrontapi.generated').CartApiQueryFragment} CartApiQueryFragment */
-/** @typedef {import('storefrontapi.generated').FooterQuery} FooterQuery */
-/** @typedef {import('storefrontapi.generated').HeaderQuery} HeaderQuery */
-
-/**
- * @param {{cart: LayoutProps['cart']}}
- */
-function CartAside({cart}) {
-  return (
-    <Aside id="cart-aside" heading="CART">
-      <Suspense fallback={<p>Loading cart ...</p>}>
-        <Await resolve={cart}>
-          {(cart) => {
-            return <CartMain cart={cart} layout="aside" />;
-          }}
-        </Await>
-      </Suspense>
-    </Aside>
-  );
-}
-
-function SearchAside() {
-  return (
-    <Aside id="search-aside" heading="SEARCH">
-      <div className="predictive-search">
-        <br />
-        <PredictiveSearchForm>
-          {({fetchResults, inputRef}) => (
-            <div>
-              <input
-                name="q"
-                onChange={fetchResults}
-                onFocus={fetchResults}
-                placeholder="Search"
-                ref={inputRef}
-                type="search"
-              />
-              &nbsp;
-              <button
-                onClick={() => {
-                  window.location.href = inputRef?.current?.value
-                    ? `/search?q=${inputRef.current.value}`
-                    : `/search`;
-                }}
-              >
-                Search
-              </button>
-            </div>
-          )}
-        </PredictiveSearchForm>
-        <PredictiveSearchResults />
-      </div>
-    </Aside>
-  );
-}
-
-/**
- * @param {{
- *   menu: HeaderQuery['menu'];
- *   shop: HeaderQuery['shop'];
- * }}
- */
 function MobileMenuAside({menu, shop}) {
   return (
     menu &&
