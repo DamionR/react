@@ -1,16 +1,16 @@
+import React from 'react';
+
 function TechnicalProficiency() {
-    const proficiencies = [
-      { skill: 'SQL and Data Analysis', level: 'Advanced' },
-      { skill: 'Backend Development', level: 'Intermediate' },
-      // Add more skills and levels here.
-    ];
-    
-    return (
-      <ul>
-        {proficiencies.map((prof, index) => (
-          <li key={index}>{prof.skill} - {prof.level}</li>
-        ))}
+  return (
+    <section className="technical-proficiency bg-gray-100 px-4 py-8 rounded shadow-md">
+      <h2>Technical Proficiency</h2>
+      <ul className="skills-list list-disc pl-4 mt-4">
+        <li>SQL and Data Analysis</li>
+        <li>Backend Development Fundamentals</li>
+        <li>Domain Management & IT Support</li>
       </ul>
-    );
-  }
-  
+    </section>
+  );
+}
+
+export default TechnicalProficiency;
