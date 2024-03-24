@@ -74,24 +74,34 @@ const certifications = [
 ];
 
 function Certifications() {
-  return (
-    <section className="certifications bg-gray-100 py-8 px-4 rounded shadow-md">
-      <h2>Certifications</h2>
-      <ul className="certification-list list-none grid grid-cols-1 md:grid-cols-2 gap-4">
-        {certifications.map((certification) => (
-          <li key={certification.name} className="certification-item bg-white p-4 rounded shadow-md hover:shadow-lg">
-            <div className="flex items-center mb-2">
-              {certification.logo && (
-                <img src={certification.logo} alt={certification.issuer} className="certification-logo mr-2 w-8 h-8" />
-              )}
-              <h4 className="text-primary font-bold">{certification.name}</h4>
-            </div>
-            <p className="text-gray-700 text-base leading-relaxed">
-              {certification.issuer} - {certification.issued}
-            </p>
-            {certification.url && (
-              <a
-                href={certification.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="certification-link inline-block mt-
+    return (
+        <section className="certifications bg-gray-100 py-8 px-4 rounded shadow-md">
+            <h2>Certifications</h2>
+            <ul className="certification-list list-none grid grid-cols-1 md:grid-cols-2 gap-4">
+                {certifications.map((certification) => (
+                    <li key={certification.name} className="certification-item bg-white p-4 rounded shadow-md hover:shadow-lg">
+                        <div className="flex items-center mb-2">
+                            {certification.logo && (
+                                <img src={certification.logo} alt={certification.issuer} className="certification-logo mr-2 w-8 h-8" />
+                            )}
+                            <h4 className="text-primary font-bold">{certification.name}</h4>
+                        </div>
+                        <p className="text-gray-700 text-base leading-relaxed">
+                            {certification.issuer} - {certification.issued}
+                        </p>
+                        {certification.url && (
+                            <a
+                                href={certification.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="certification-link inline-block mt-"
+                            >
+                                View Credential
+                            </a>
+                        )}
+                    </li>
+                ))}
+            </ul>
+        </section>
+    );
+}
