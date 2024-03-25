@@ -1,38 +1,30 @@
-import React from 'react';
-import { Suspense } from 'react';
-import { Await } from '@remix-run/react';
-import Header from './components/Header'; // Assuming your Header component path
-import NavigationBar from './components/NavigationBar'; // Assuming your NavigationBar component path
-import Footer from './components/Footer'; // Assuming your Footer component path
-import { Outlet } from 'remix'; // For rendering page content
+import React, { Suspense } from 'react';
+import Header from './Header'; // Update these paths according to your actual file structure
+import NavigationBar from './NavigationBar';
+import Footer from './Footer';
+import { Outlet } from 'react-router-dom'; // Use react-router's Outlet for nested routes
 
-import Introduction from './components/Home/Introduction'; // Assuming your Introduction component path
-import SkillHighlights from './components/Home/SkillHighlights'; // Assuming your SkillHighlights component path
-import RecentProjectsPreview from './components/Home/RecentProjectsPreview'; // Assuming your RecentProjectsPreview component path
-import ProfessionalSummary from './components/About/ProfessionalSummary'; // Assuming your ProfessionalSummary component path
-import TechnicalProficiency from './components/About/TechnicalProficiency'; // Assuming your TechnicalProficiency component path
-import PersonalityInsights from './components/About/PersonalityInsights'; // Assuming your PersonalityInsights component path
-import ProjectGallery from './components/Portfolio/ProjectGallery'; // Assuming your ProjectGallery component path
-import ProjectCard from './components/Portfolio/ProjectCard'; // Assuming your ProjectCard component path
-import ResumeDownload from './components/Resume/ResumeDownload'; // Assuming your ResumeDownload component path
-import CareerTimeline from './components/Resume/CareerTimeline'; // Assuming your CareerTimeline component path
-import BlogListing from './components/Blog/BlogListing'; // Assuming your BlogListing component path (if applicable)
-import ContactForm from './components/Contact/ContactForm'; // Assuming your ContactForm component path
-import SocialLinks from './components/Contact/SocialLinks'; // Assuming your SocialLinks component path
-import Aside from './components/Aside'; // Assuming your Aside component path
-import CartMain from './components/CartMain'; // Assuming your CartMain component path
-import PredictiveSearchForm from './components/PredictiveSearchForm'; // Assuming your PredictiveSearchForm component path
-import PredictiveSearchResults from './components/PredictiveSearchResults'; // Assuming your PredictiveSearchResults component path
-import HeaderMenu from './components/HeaderMenu'; // Assuming your HeaderMenu component path
+// Conditional page components
+import Introduction from './Home/Introduction';
+import SkillHighlights from './Home/SkillHighlights';
+import RecentProjectsPreview from './Home/RecentProjectsPreview';
+import ProfessionalSummary from './About/ProfessionalSummary';
+import TechnicalProficiency from './About/TechnicalProficiency';
+import PersonalityInsights from './About/PersonalityInsights';
+import ProjectGallery from './Portfolio/ProjectGallery';
+import ProjectCard from './Portfolio/ProjectCard';
+import ResumeDownload from './Resume/ResumeDownload';
+import CareerTimeline from './Resume/CareerTimeline';
+import BlogListing from './Blog/BlogListing';
+import ContactForm from './Contact/ContactForm';
+import SocialLinks from './Contact/SocialLinks';
 
-export function Layout({ children, page, ...props }) { // Use props object for flexibility
+export function Layout({ children, page }) {
   return (
     <>
-      <Header {...props} />
+      <Header />
       <NavigationBar />
-      <main className="container"> {/* Wrap main content in a container */}
-
-        {/* Homepage Content */}
+      <main className="container">
         {page === 'home' && (
           <>
             <Introduction />
@@ -40,8 +32,6 @@ export function Layout({ children, page, ...props }) { // Use props object for f
             <RecentProjectsPreview />
           </>
         )}
-
-        {/* About Me Content */}
         {page === 'about' && (
           <>
             <ProfessionalSummary />
@@ -49,118 +39,31 @@ export function Layout({ children, page, ...props }) { // Use props object for f
             <PersonalityInsights />
           </>
         )}
-
-        {/* Portfolio Content */}
         {page === 'portfolio' && (
-          <ProjectGallery>
-            <ProjectCard project={{ title: 'Project 1', description: 'Brief description', link: 'https://...' }} />
-            <ProjectCard project={{ title: 'Project 2', description: 'Brief description', link: 'https://...' }} />
-            {/* ... Add more ProjectCard components */}
-          </ProjectGallery>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ProjectGallery>
+              {/* Assuming ProjectGallery will map over projects and render ProjectCards */}
+            </ProjectGallery>
+          </Suspense>
         )}
-
-        {/* Resume Content */}
         {page === 'resume' && (
           <>
             <ResumeDownload />
             <CareerTimeline />
           </>
         )}
-
-        {/* Blog Content (if applicable) */}
-        {page === 'blog' && (
-          <BlogListing />
-        )}
-
-        {/* Contact Content */}
+        {page === 'blog' && <BlogListing />}
         {page === 'contact' && (
           <>
             <ContactForm />
-            <SocialLinks socialLinks={[{ icon: '...', url: '...' }, { icon: '...', url: '...' }]} />
+            <SocialLinks />
           </>
         )}
 
-        <Outlet /> {/* Render page-specific content here (optional) */}
+        {/* Outlet for rendering nested route components */}
+        <Outlet />
       </main>
-      <Footer {...props} />
+      <Footer />
     </>
   );
 }
-
-function CartAside({cart}) {
-  return (
-    <Aside id="cart-aside" heading="CART">
-      <Suspense fallback={<p>Loading cart ...</p>}>
-        <Await resolve={cart}>
-          {(cart) => {
-            return <CartMain cart={cart} layout="aside" />;
-          }}
-        </Await>
-      </Suspense>
-    </Aside>
-  );
-}
-
-function SearchAside() {
-  return (
-    <Aside id="search-aside" heading="SEARCH">
-      <div className="predictive-search">
-        <br />
-        <PredictiveSearchForm>
-          {({fetchResults, inputRef}) => (
-            <div>
-              <input
-                name="q"
-                onChange={fetchResults}
-                onFocus={fetchResults}
-                placeholder="Search"
-                ref={inputRef}
-                type="search"
-              />
-              &nbsp;
-              <button
-                onClick={() => {
-                  window.location.href = inputRef?.current?.value
-                    ? `/search?q=${inputRef.current.value}`
-                    : `/search`;
-                }}
-              >
-                Search
-              </button>
-            </div>
-          )}
-        </PredictiveSearchForm>
-        <PredictiveSearchResults />
-      </div>
-    </Aside>
-  );
-}
-
-function MobileMenuAside({menu, shop}) {
-  return (
-    menu &&
-    shop?.primaryDomain?.url && (
-      <Aside id="mobile-menu-aside" heading="MENU">
-        <HeaderMenu
-          menu={menu}
-          viewport="mobile"
-          primaryDomainUrl={shop.primaryDomain.url}
-        />
-      </Aside>
-    )
-  );
-}
-
-/**
- * @typedef {{
- *   cart: Promise<CartApiQueryFragment | null>;
- *   children?: React.ReactNode;
- *   footer: Promise<FooterQuery>;
- *   header: HeaderQuery;
- *   isLoggedIn: Promise<boolean>;
- * }} LayoutProps
- */
-
-/** @typedef {import('storefrontapi.generated').CartApiQueryFragment} CartApiQueryFragment */
-/** @typedef {import('storefrontapi.generated').FooterQuery} FooterQuery */
-/** @typedef {import('storefrontapi.generated').HeaderQuery} HeaderQuery */
